@@ -70,7 +70,7 @@ class Twitter extends React.Component{
         .then(res => res.json())
         .then(
         	(result) =>{
-        		let newTweet = result.draft_tweets;
+        		let newTweet = result.draft_tweet;
         		let tweets = this.state.tweets.slice();
         		this.setState({
         			isLoaded: true,
@@ -140,7 +140,6 @@ class Twitter extends React.Component{
 					</div>
 					<div className="tweets">
 						{content}
-						
 					</div>
 				</div>
 			</div>
