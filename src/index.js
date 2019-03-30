@@ -73,6 +73,8 @@ class Postbar extends React.Component{
 
 	myClick(){
 		this.props.click(null, this.state.user, this.state.avatar, this.myRef.current.value);
+		this.myRef.current.value = '';
+		this.myRef.current.focus();
 	}
 
 	render(){
