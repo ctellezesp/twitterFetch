@@ -27,13 +27,21 @@ class Feed extends React.Component{
 }
 
 class Profile extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			user: 'Carlos',
+			avatar: 'https://avatars0.githubusercontent.com/u/26472750?s=460&v=4'
+		}
+	}
+
 	render(){
 		return(
 			<div className="profile">
-				<img className="img-profile" src="https://avatars0.githubusercontent.com/u/26472750?s=460&v=4" />
+				<img className="img-profile" src={this.state.avatar} />
 				<div className="profile-info">
-					<span className="username">@ctellezesp</span>
-					<span className="name">Carlos</span>
+					<span className="username">@{this.state.user}</span>
+					<span className="name">{this.state.user}</span>
 				</div>
 			</div>
 		);
@@ -45,17 +53,38 @@ class Postbar extends React.Component{
 		super(props);
 		this.myRef = React.createRef();
 		this.myClick = this.myClick.bind(this);
+		this.selectUser = this.selectUser.bind(this);
+		this.state = {
+			user: 'Carlos',
+			avatar: 'https://avatars0.githubusercontent.com/u/26472750?s=460&v=4',
+			post: ''
+		};
+	}
+
+	selectUser(event){
+		if(event.target.value === 'Pepe')
+		{
+			this.setState({user: event.target.value, avatar: 'https://i.imgur.com/N7Wtiwe.jpg'});
+		}
+		else if(event.target.value === 'Carlos'){
+			this.setState({user: event.target.value, avatar: 'https://avatars0.githubusercontent.com/u/26472750?s=460&v=4'});
+		}
 	}
 
 	myClick(){
-		this.props.click(null, this.myRef);
+		this.props.click(null, this.state.user, this.state.avatar, this.myRef.current.value);
 	}
 
 	render(){
 		return(
 			<div className="bar">
+				<select onChange={this.selectUser}>
+					<option value="Carlos">Carlos</option>
+					<option value="Pepe">Pepe</option>
+					
+				</select>
 				<div className="img-bar">
-					<img className="img-profile" src="https://scontent.fntr4-1.fna.fbcdn.net/v/t31.0-1/c362.106.1324.1324a/s320x320/133460_150577164994084_5857203_o.jpg?_nc_cat=111&_nc_ht=scontent.fntr4-1.fna&oh=934b9abef83d1ec86ca313a135894d87&oe=5D4BDCB1" />
+					<img className="img-profile" src={this.state.avatar} />
 				</div>
 				<div className="myTweet">
 					<textarea className="post-tweet" type="text" placeholder="What's Happening?" ref={this.myRef}></textarea>
@@ -121,20 +150,25 @@ class Twitter extends React.Component{
 		)
 	}
 
-	handleClick(e, ref){
+	handleClick(e, user, avatar, post){
 		/*this.setState({tweets: [...this.state.tweets, {user: '@cristiano', date: new Date().toString(), post: this.myRef.current.value}]});
 		console.log(this.state.tweets);
 		this.myRef.current.value = '';
         this.myRef.current.focus();
         */
+
+        console.log({user, avatar, post});
+        debugger;
         this.setState({
         	isLoaded: false
         });
         let newTweet = {
-        	user_name: 'Pepe',
-        	avatar: 'https://scontent.fntr4-1.fna.fbcdn.net/v/t31.0-1/c362.106.1324.1324a/s320x320/133460_150577164994084_5857203_o.jpg?_nc_cat=111&_nc_ht=scontent.fntr4-1.fna&oh=934b9abef83d1ec86ca313a135894d87&oe=5D4BDCB1',
-        	description: ref.current.value
+        	user_name: user,
+        	avatar: avatar,
+        	description: post
         }
+        console.log(newTweet);
+        debugger;
 
         let headers = {};
         headers['Content-Type'] = 'application/json';
@@ -163,9 +197,6 @@ class Twitter extends React.Component{
         		})
         	}
         )
-
-        ref.current.value = '';
-        ref.current.focus();
 
 	}
 
