@@ -11,10 +11,89 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-class Twitter extends React.Component{
+class Feed extends React.Component{
+	render(){
+		
+		if(this.props.error)
+		{
+			return <div>No hay Tweets</div>;
+		}
+		else{
+			return this.props.tweets.map((tweet) => 
+				<Tweet tweet={tweet}/>
+			);
+		}
+	}
+}
+
+class Profile extends React.Component{
+	render(){
+		return(
+			<div className="profile">
+				<img className="img-profile" src="https://avatars0.githubusercontent.com/u/26472750?s=460&v=4" />
+				<div className="profile-info">
+					<span className="username">@ctellezesp</span>
+					<span className="name">Carlos</span>
+				</div>
+			</div>
+		);
+	}
+}
+
+class Postbar extends React.Component{
 	constructor(props){
 		super(props);
 		this.myRef = React.createRef();
+		this.myClick = this.myClick.bind(this);
+	}
+
+	myClick(){
+		this.props.click(null, this.myRef);
+	}
+
+	render(){
+		return(
+			<div className="bar">
+				<div className="img-bar">
+					<img className="img-profile" src="https://scontent.fntr4-1.fna.fbcdn.net/v/t31.0-1/c362.106.1324.1324a/s320x320/133460_150577164994084_5857203_o.jpg?_nc_cat=111&_nc_ht=scontent.fntr4-1.fna&oh=934b9abef83d1ec86ca313a135894d87&oe=5D4BDCB1" />
+				</div>
+				<div className="myTweet">
+					<textarea className="post-tweet" type="text" placeholder="What's Happening?" ref={this.myRef}></textarea>
+				</div>
+				<div className="btn">
+					<button className="btn-tweet" onClick={this.myClick}>Tweet</button>
+				</div>
+			</div>
+		);
+	}
+}
+
+class Tweet extends React.Component{
+	render(){
+		return(
+			<div className="the-tweet" key={this.props.tweet.id}>
+				<div className="img-tweet">
+					<img className="img-profile" src={this.props.tweet.avatar} />
+				</div>
+				<div className="body-tweet">
+					<div className="header-tweet">
+						<span className="username">{this.props.tweet.user_name}</span>
+						<span className="date">{this.props.tweet.created_at}</span>
+					</div>
+					<div className="content-tweet">
+						<span className="text-tweet">
+							{this.props.tweet.description}
+						</span>
+					</div>
+				</div>
+			</div>
+		);
+	}
+}
+
+class Twitter extends React.Component{
+	constructor(props){
+		super(props);
 		this.handleClick = this.handleClick.bind(this);
 		this.state = {
 			tweets: [],
@@ -42,7 +121,7 @@ class Twitter extends React.Component{
 		)
 	}
 
-	handleClick(){
+	handleClick(e, ref){
 		/*this.setState({tweets: [...this.state.tweets, {user: '@cristiano', date: new Date().toString(), post: this.myRef.current.value}]});
 		console.log(this.state.tweets);
 		this.myRef.current.value = '';
@@ -52,9 +131,9 @@ class Twitter extends React.Component{
         	isLoaded: false
         });
         let newTweet = {
-        	user_name: 'Carlos',
-        	avatar: 'https://avatars0.githubusercontent.com/u/26472750?s=460&v=4',
-        	description: this.myRef.current.value
+        	user_name: 'Pepe',
+        	avatar: 'https://scontent.fntr4-1.fna.fbcdn.net/v/t31.0-1/c362.106.1324.1324a/s320x320/133460_150577164994084_5857203_o.jpg?_nc_cat=111&_nc_ht=scontent.fntr4-1.fna&oh=934b9abef83d1ec86ca313a135894d87&oe=5D4BDCB1',
+        	description: ref.current.value
         }
 
         let headers = {};
@@ -85,61 +164,22 @@ class Twitter extends React.Component{
         	}
         )
 
-        this.myRef.current.value = '';
-        this.myRef.current.focus();
+        ref.current.value = '';
+        ref.current.focus();
 
 	}
 
 
 	render(){
 		const {error, isLoaded, tweets} = this.state;
-		let content;
-		if(error){
-			content = <div>No hay Tweets</div>;
-		}
-		else{
-			content = tweets.map((tweet) => 
-				<div className="the-tweet" key={tweet.id}>
-					<div className="img-tweet">
-						<img className="img-profile" src={tweet.avatar} />
-					</div>
-					<div className="body-tweet">
-						<div className="header-tweet">
-							<span className="username">{tweet.user_name}</span>
-							<span className="date">{tweet.created_at}</span>
-						</div>
-						<div className="content-tweet">
-							<span className="text-tweet">
-								{tweet.description}
-							</span>
-						</div>
-					</div>
-				</div>
-			);
-		}
+		
 		return(
 			<div id="main">
-				<div className="profile">
-					<img className="img-profile" src="https://avatars0.githubusercontent.com/u/26472750?s=460&v=4" />
-					<div className="profile-info">
-						<span className="username">@ctellezesp</span>
-						<span className="name">Carlos</span>
-					</div>
-				</div>
+				<Profile />
 				<div className="landing">
-					<div className="bar">
-						<div className="img-bar">
-							<img className="img-profile" src="https://avatars0.githubusercontent.com/u/26472750?s=460&v=4" />
-						</div>
-						<div className="myTweet">
-							<textarea className="post-tweet" type="text" placeholder="What's Happening?" ref={this.myRef}></textarea>
-						</div>
-						<div className="btn">
-							<button className="btn-tweet" onClick={this.handleClick}>Tweet</button>
-						</div>
-					</div>
+					<Postbar click={this.handleClick}/>
 					<div className="tweets">
-						{content}
+						<Feed error={error} tweets={tweets}/>
 					</div>
 				</div>
 			</div>
