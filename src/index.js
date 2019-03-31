@@ -26,28 +26,6 @@ class Feed extends React.Component{
 	}
 }
 
-class Profile extends React.Component{
-	constructor(props){
-		super(props);
-		this.state = {
-			user: 'Carlos',
-			avatar: 'https://avatars0.githubusercontent.com/u/26472750?s=460&v=4'
-		}
-	}
-
-	render(){
-		return(
-			<div className="profile">
-				<img className="img-profile" src={this.state.avatar} />
-				<div className="profile-info">
-					<span className="username">@{this.state.user}</span>
-					<span className="name">{this.state.user}</span>
-				</div>
-			</div>
-		);
-	}
-}
-
 class Postbar extends React.Component{
 	constructor(props){
 		super(props);
@@ -208,7 +186,9 @@ class Twitter extends React.Component{
 		
 		return(
 			<div id="main">
-				<Profile />
+				<div class="thanks">
+					<span>Hecho por José Juan Alvarado García y Carlos Erasmo Téllez Espejel</span>
+				</div>
 				<div className="landing">
 					<Postbar click={this.handleClick}/>
 					<div className="tweets">
